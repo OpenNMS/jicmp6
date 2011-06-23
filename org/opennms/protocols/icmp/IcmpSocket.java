@@ -54,9 +54,9 @@ import java.net.InetAddress;
  * 
  */
 public final class IcmpSocket {
-    private static final String LIBRARY_NAME = "jicmp";
-    private static final String PROPERTY_NAME = "opennms.library.jicmp";
-    private static final String LOGGER_PROPERTY_NAME = "opennms.logger.jicmp";
+    private static final String LIBRARY_NAME = "jicmp6";
+    private static final String PROPERTY_NAME = "opennms.library.jicmp6";
+    private static final String LOGGER_PROPERTY_NAME = "opennms.logger.jicmp6";
     
     public interface Logger {
         public void debug(String msg);
@@ -124,7 +124,7 @@ public final class IcmpSocket {
                 return (Logger)Class.forName(System.getProperty(LOGGER_PROPERTY_NAME)).newInstance();
             }
         } catch (Exception e) {
-            System.err.println("[WARN] Unable to create jicmp logger from property "+LOGGER_PROPERTY_NAME+" with value "+System.getProperty(LOGGER_PROPERTY_NAME)+". "+e);
+            System.err.println("[WARN] Unable to create jicmp6 logger from property "+LOGGER_PROPERTY_NAME+" with value "+System.getProperty(LOGGER_PROPERTY_NAME)+". "+e);
         }
         return new Logger() {
             public void debug(String msg) {

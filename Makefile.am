@@ -34,20 +34,20 @@ JICMP_SOURCES = byteswap.h IcmpSocket.h IcmpSocket.c
 JICMP_LDFLAGS = -module -avoid-version -no-undefined $(JAVA_SHREXT_COMMAND)
 
 if WIN32
-lib_LTLIBRARIES = jicmp.la
-jicmp_la_SOURCES = $(JICMP_SOURCES)
-jicmp_la_LDFLAGS = $(JICMP_LDFLAGS)
-jicmp_la_LIBADD = -lws2_32
+lib_LTLIBRARIES = jicmp6.la
+jicmp6_la_SOURCES = $(JICMP_SOURCES)
+jicmp6_la_LDFLAGS = $(JICMP_LDFLAGS)
+jicmp6_la_LIBADD = -lws2_32
 else
-lib_LTLIBRARIES = libjicmp.la
-libjicmp_la_SOURCES = $(JICMP_SOURCES)
-libjicmp_la_LDFLAGS = $(JICMP_LDFLAGS)
+lib_LTLIBRARIES = libjicmp6.la
+libjicmp6_la_SOURCES = $(JICMP_SOURCES)
+libjicmp6_la_LDFLAGS = $(JICMP_LDFLAGS)
 endif
 
-TESTS_ENVIRONMENT = $(LIBTOOL) --mode=execute -dlopen $(top_builddir)/libjicmp.la
+TESTS_ENVIRONMENT = $(LIBTOOL) --mode=execute -dlopen $(top_builddir)/libjicmp6.la
 TESTS = tests.sh
 MAINTAINERCLEANFILES = aclocal.m4 config.guess config.sub configure depcomp install-sh ltmain.sh Makefile.in missing config.h.in *~ *.tar.gz
-CLEANFILES = org_*.h jicmp.jar
+CLEANFILES = org_*.h jicmp6.jar
 
 .PHONY: clean-local
 
@@ -65,12 +65,12 @@ IcmpSocket.c: org_opennms_protocols_icmp_IcmpSocket.h
 org_opennms_protocols_icmp_IcmpSocket.h: java.built
 	$(JAVAH) -classpath $(classdir) org.opennms.protocols.icmp.IcmpSocket
 
-jicmp.jar: java.built
+jicmp6.jar: java.built
 	cd $(classdir) && \
 	$(JAR) cvf ../$@ *
 
 jardir=$(datadir)/java
-jar_DATA = jicmp.jar
+jar_DATA = jicmp6.jar
 
 deploy:
 	mvn deploy:deploy-file
@@ -92,7 +92,7 @@ EXTRA_DIST = ChangeLog solaris/pkginfo $(JAVA_FILES) win32/icmp.h CMakeLists.txt
 if MAKE_RPMS
 rpm: @RPM_TARGET@
 
-EXTRA_DIST += jicmp.spec
+EXTRA_DIST += jicmp6.spec
 
 $(RPM_TARGET): $(DISTFILES)
 	${MAKE} dist

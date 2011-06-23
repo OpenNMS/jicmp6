@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT([jicmp], [1.2.1], [http://www.opennms.org])
+AC_INIT([jicmp6], [1.0], [http://www.opennms.org])
 
 RELEASE=1
 AC_SUBST([RELEASE])
@@ -109,6 +109,6 @@ esac
 
 AM_CONDITIONAL([WIN32], [test x$on_win32 = xyes])
 
-AC_CONFIG_FILES([Makefile jicmp.spec pom.xml solaris/pkginfo])
+AC_CONFIG_FILES([Makefile jicmp6.spec pom.xml solaris/pkginfo])
 AC_CONFIG_FILES([tests.sh], [chmod +x tests.sh])
 AC_OUTPUT

@@ -1,4 +1,4 @@
-project(jicmp)
+project(jicmp6)
 
 cmake_minimum_required(VERSION 2.4.3)
 
@@ -12,7 +12,7 @@ set(CPACK_PACKAGE_VERSION_MAJOR "1")
 set(CPACK_PACKAGE_VERSION_MINOR "2")
 set(CPACK_PACKAGE_VERSION_PATCH "1")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "JICMP ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}")
-set(CPACK_SOURCE_PACKAGE_FILE_NAME "jicmp-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
+set(CPACK_SOURCE_PACKAGE_FILE_NAME "jicmp6-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
 
 include(CheckIncludeFiles)
 include(CheckTypeSize)
@@ -109,20 +109,20 @@ endforeach(FILE ${JAVA_SOURCE_FILES})
 
 add_custom_command(OUTPUT ${JAVA_CLASS_FILES} COMMAND "${JAVABIN_PATH}/javac" -d ${CMAKE_CURRENT_BINARY_DIR} -classpath ${CMAKE_CURRENT_BINARY_DIR} ${JAVA_SOURCE_FILES} DEPENDS ${JAVA_SOURCE_FILES} WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/org_opennms_protocols_icmp_IcmpSocket.h" COMMAND "${JAVABIN_PATH}/javah" -d ${CMAKE_CURRENT_BINARY_DIR} -classpath ${CMAKE_CURRENT_BINARY_DIR} org.opennms.protocols.icmp.IcmpSocket DEPENDS ${JAVA_CLASS_FILES} "${CMAKE_CURRENT_BINARY_DIR}/jicmp.jar" WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/org_opennms_protocols_icmp_IcmpSocket.h" COMMAND "${JAVABIN_PATH}/javah" -d ${CMAKE_CURRENT_BINARY_DIR} -classpath ${CMAKE_CURRENT_BINARY_DIR} org.opennms.protocols.icmp.IcmpSocket DEPENDS ${JAVA_CLASS_FILES} "${CMAKE_CURRENT_BINARY_DIR}/jicmp6.jar" WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 configure_file(config.h.cmake "${CMAKE_CURRENT_BINARY_DIR}/config.h")
 include_directories(${JAVA_INCLUDE_PATH})
 
-add_library(jicmp MODULE IcmpSocket.c "${CMAKE_CURRENT_BINARY_DIR}/org_opennms_protocols_icmp_IcmpSocket.h")
+add_library(jicmp6 MODULE IcmpSocket.c "${CMAKE_CURRENT_BINARY_DIR}/org_opennms_protocols_icmp_IcmpSocket.h")
 
 if(APPLE)
-	set_target_properties(jicmp PROPERTIES SUFFIX .jnilib)
+	set_target_properties(jicmp6 PROPERTIES SUFFIX .jnilib)
 endif(APPLE)
 
 if(WIN32)
-	set_target_properties(jicmp PROPERTIES PREFIX "")
-	target_link_libraries(jicmp ws2_32)
+	set_target_properties(jicmp6 PROPERTIES PREFIX "")
+	target_link_libraries(jicmp6 ws2_32)
 
 	foreach(flag_var
 		CMAKE_CXX_FLAGS
@@ -137,7 +137,7 @@ if(WIN32)
 	endforeach(flag_var)
 endif(WIN32)
 
-add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/jicmp.jar" COMMAND ${JAVA_ARCHIVE} -cvf jicmp.jar org DEPENDS ${JAVA_CLASS_FILES} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/jicmp6.jar" COMMAND ${JAVA_ARCHIVE} -cvf jicmp6.jar org DEPENDS ${JAVA_CLASS_FILES} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
-install(TARGETS jicmp DESTINATION lib)
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/jicmp.jar" DESTINATION share/java RENAME "jicmp-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}.jar")
+install(TARGETS jicmp6 DESTINATION lib)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/jicmp6.jar" DESTINATION share/java RENAME "jicmp6-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}.jar")

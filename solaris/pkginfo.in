@@ -1,5 +1,5 @@
-PKG="NMSjicmp"
-NAME="OpenNMS jicmp JNI library"
+PKG="NMSjicmp6"
+NAME="OpenNMS jicmp IPv6 JNI library"
 ARCH="@ARCH_PKG@"
 VERSION="@VERSION@,REV=@RELEASE@" @UNAME_S@-@UNAME_R@
 CATEGORY="application"

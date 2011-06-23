@@ -1,13 +1,13 @@
 i pkginfo
 d none /opt ? ? ?
-d none /opt/NMSjicmp 0555 root root
-d none /opt/NMSjicmp/lib 0555 root root
-f none /opt/NMSjicmp/lib/libjicmp.so=target/lib/32/libjicmp.so 0555 root root
-s none /opt/NMSjicmp/lib/32=.
-s none /opt/NMSjicmp/lib/64=amd64
-d none /opt/NMSjicmp/lib/amd64 0555 root root
-f none /opt/NMSjicmp/lib/amd64/libjicmp.so=target/lib/64/libjicmp.so 0555 root root
-s none /opt/NMSjicmp/lib/i386=.
-d none /opt/NMSjicmp/share 0555 root root
-d none /opt/NMSjicmp/share/java 0555 root root
-f none /opt/NMSjicmp/share/java/jicmp.jar=target/share/java/jicmp.jar 0444 root root
+d none /opt/NMSjicmp6 0555 root root
+d none /opt/NMSjicmp6/lib 0555 root root
+f none /opt/NMSjicmp6/lib/libjicmp6.so=target/lib/32/libjicmp6.so 0555 root root
+s none /opt/NMSjicmp6/lib/32=.
+s none /opt/NMSjicmp6/lib/64=amd64
+d none /opt/NMSjicmp6/lib/amd64 0555 root root
+f none /opt/NMSjicmp6/lib/amd64/libjicmp6.so=target/lib/64/libjicmp6.so 0555 root root
+s none /opt/NMSjicmp6/lib/i386=.
+d none /opt/NMSjicmp6/share 0555 root root
+d none /opt/NMSjicmp6/share/java 0555 root root
+f none /opt/NMSjicmp6/share/java/jicmp6.jar=target/share/java/jicmp6.jar 0444 root root
