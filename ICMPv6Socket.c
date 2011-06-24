@@ -308,7 +308,7 @@ end_inet:
 	return addrInstance;
 }
 
-static void getInetAddress(JNIEnv *env, jobject instance, unsigned char* addr)
+static void getInetAddress(JNIEnv *env, jobject instance, unsigned char addr[])
 {
 	jclass		addrClass = NULL;
 	jmethodID	addrArrayMethodID = NULL;
@@ -340,7 +340,7 @@ static void getInetAddress(JNIEnv *env, jobject instance, unsigned char* addr)
 	* The byte array returned from java.net.InetAddress.getAddress()
 	* (which was fetched above and is stored as a jbyteArray in addrData)
 	* is in network byte order (high byte first, AKA big endian).
-	* the value of in_addr_t is also in network byte order, so no
+	* the value of addr is also in network byte order, so no
 	* conversion needs to be performed.
 	*/
 	(*env)->GetByteArrayRegion(env,
@@ -433,7 +433,7 @@ Java_org_opennms_protocols_icmp6_ICMPv6Socket_receive (JNIEnv *env, jobject inst
 	onms_socklen_t		inAddrLen;
 	int			iRC;
 	void *			inBuf = NULL;
-	struct icmp6_hdr *		icmp6Hdr = NULL;
+	struct icmp6_hdr *	icmp6Hdr = NULL;
 
 	jbyteArray		byteArray 	= NULL;
 	jobject			addrInstance 	= NULL;
