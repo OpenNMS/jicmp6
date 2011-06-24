@@ -42,6 +42,13 @@ AC_HEADER_STDC
 CPPFLAGS="$CPPFLAGS $JNI_INCLUDES -I."
 AC_CHECK_HEADER([jni.h], [], [AC_MSG_ERROR([cannot find jni.h header with CPPFLAGS="$CPPFLAGS"])])
 
+AC_CHECK_HEADERS([netinet/in.h])
+AC_CHECK_HEADERS([netinet/icmp6.h],[],[],[
+#ifdef HAVE_NETINET_IN_H
+#include <netinet/in.h>
+#endif
+
+])
 AC_CHECK_HEADERS([sys/types.h AvailabilityMacros.h libkern/OSByteOrder.h architecture/byte_order.h byteswap.h errno.h malloc.h netdb.h stdlib.h sys/byteorder.h sys/time.h], [], [], [
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
@@ -57,25 +64,6 @@ AC_C_CONST
 # should be part of stdlib
 AC_CHECK_FUNC([getenv], AC_DEFINE([HAVE_GETENV], [1], [If present, the getenv function allows us to read environment variables.]))
 
-ONMS_CHECK_IP_STRUCT([ip])
-ONMS_CHECK_IP_STRUCT([iphdr])
-ONMS_CHECK_IP_STRUCT([icmp],    [
-#ifdef HAVE_NETINET_IP_ICMP_H
-# include <netinet/ip_icmp.h>
-#endif
-])
-ONMS_CHECK_IP_STRUCT([icmphdr], [
-#ifdef HAVE_NETINET_IP_ICMP_H
-# include <netinet/ip_icmp.h>
-#endif
-])
-
-ONMS_CHECK_IP_STRUCT_ENTRY([HL], [ip_hl])
-ONMS_CHECK_IP_STRUCT_ENTRY([HL], [ihl])
-ONMS_CHECK_ICMP_STRUCT_ENTRY([TYPE], [icmp_type])
-ONMS_CHECK_ICMP_STRUCT_ENTRY([TYPE], [type])
-ONMS_CHECK_ICMP_STRUCT_ENTRY([CHECKSUM], [icmp_cksum])
-ONMS_CHECK_ICMP_STRUCT_ENTRY([CHECKSUM], [checksum])
 
 AC_CHECK_TYPE([struct timeval],
 	[],

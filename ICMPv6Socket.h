@@ -84,12 +84,8 @@
 #include <netinet/in.h>
 #endif
 
-#ifdef HAVE_NETINET_IP_H
-#include <netinet/ip.h>
-#endif
-
-#ifdef HAVE_NETINET_IP_ICMP_H
-#include <netinet/ip_icmp.h>
+#ifdef HAVE_NETINET_ICMP6_H
+#include <netinet/icmp6.h>
 #endif
 
 #ifdef HAVE_NETDB_H
@@ -173,21 +169,6 @@
 
 #endif
 
-#if defined(HAVE_STRUCT_IP)
-typedef struct ip iphdr_t;
-#elif defined(HAVE_STRUCT_IPHDR)
-typedef struct iphdr iphdr_t;
-#else
-# error "not sure how to get an IP header struct on this platform!"
-#endif
-
-#if defined(HAVE_STRUCT_ICMP)
-typedef struct icmp icmphdr_t;
-#elif defined(HAVE_STRUCT_ICMPHDR)
-typedef struct icmphdr icmphdr_t;
-#else
-# error "not sure how to get an ICMP header struct on this platform!"
-#endif
 
 /**
  * This macro is used to recover the current time
@@ -282,6 +263,7 @@ typedef struct icmphdr icmphdr_t;
 # define OPENNMS_TAG_LEN 8
 # define OPENNMS_TAG_OFFSET (RTT_OFFSET + TIME_LENGTH)
 #endif
+
 
 /**
  * Winsock uses SOCKET, which is a special kind of Windows

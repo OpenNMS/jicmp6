@@ -1,36 +1,25 @@
 ACLOCAL_AMFLAGS = -I m4
 AM_CPPFLAGS = $(JNI_INCLUDES) -I$(top_srcdir) -I$(top_builddir)
 
-CLASS_FILES = org/opennms/protocols/icmp/AddressMaskReply.class \
-	org/opennms/protocols/icmp/AddressMaskRequest.class \
-	org/opennms/protocols/icmp/ErrorMessage.class \
-	org/opennms/protocols/icmp/ICMPEchoPacket.class \
-	org/opennms/protocols/icmp/ICMPHeader.class \
-	org/opennms/protocols/icmp/IcmpSocket.class \
-	org/opennms/protocols/icmp/TimestampReply.class \
-	org/opennms/protocols/icmp/TimestampRequest.class \
-	org/opennms/protocols/ip/IPHeader.class \
-	org/opennms/protocols/ip/IPv4Address.class \
-	org/opennms/protocols/ip/OC16ChecksumProducer.class \
-	org/opennms/protocols/ip/UnknownIPVersionException.class
+CLASS_FILES = \
+	org/opennms/protocols/icmp6/ICMPv6Packet.class \
+	org/opennms/protocols/icmp6/ICMPv6EchoPacket.class \
+	org/opennms/protocols/icmp6/ICMPv6EchoRequest.class \
+	org/opennms/protocols/icmp6/ICMPv6EchoReply.class \
+	org/opennms/protocols/icmp6/ICMPv6Socket.class
 
-JAVA_FILES = org/opennms/protocols/icmp/AddressMaskReply.java \
-	org/opennms/protocols/icmp/AddressMaskRequest.java \
-	org/opennms/protocols/icmp/ErrorMessage.java \
-	org/opennms/protocols/icmp/ICMPEchoPacket.java \
-	org/opennms/protocols/icmp/ICMPHeader.java \
-	org/opennms/protocols/icmp/IcmpSocket.java \
-	org/opennms/protocols/icmp/TimestampReply.java \
-	org/opennms/protocols/icmp/TimestampRequest.java \
-	org/opennms/protocols/ip/IPHeader.java \
-	org/opennms/protocols/ip/IPv4Address.java \
-	org/opennms/protocols/ip/OC16ChecksumProducer.java \
-	org/opennms/protocols/ip/UnknownIPVersionException.java
+
+JAVA_FILES = \
+	org/opennms/protocols/icmp6/ICMPv6Packet.java \
+	org/opennms/protocols/icmp6/ICMPv6EchoPacket.java \
+	org/opennms/protocols/icmp6/ICMPv6EchoRequest.java \
+	org/opennms/protocols/icmp6/ICMPv6EchoReply.java \
+	org/opennms/protocols/icmp6/ICMPv6Socket.java
 
 classdir=classes
 VPATH += $(classdir)
 
-JICMP_SOURCES = byteswap.h IcmpSocket.h IcmpSocket.c
+JICMP_SOURCES = byteswap.h ICMPv6Socket.h ICMPv6Socket.c
 JICMP_LDFLAGS = -module -avoid-version -no-undefined $(JAVA_SHREXT_COMMAND)
 
 if WIN32
@@ -60,10 +49,10 @@ java.built: $(JAVA_FILES)
 	-mkdir -p $(classdir)
 	$(JAVAC) $(JAVACFLAGS) -source 1.5 -target 1.5 -d $(classdir) $(JAVA_FILES) && touch java.built
 
-IcmpSocket.c: org_opennms_protocols_icmp_IcmpSocket.h
+ICMPv6Socket.c: org_opennms_protocols_icmp6_ICMPv6Socket.h
 
-org_opennms_protocols_icmp_IcmpSocket.h: java.built
-	$(JAVAH) -classpath $(classdir) org.opennms.protocols.icmp.IcmpSocket
+org_opennms_protocols_icmp6_ICMPv6Socket.h: java.built
+	$(JAVAH) -classpath $(classdir) org.opennms.protocols.icmp6.ICMPv6Socket
 
 jicmp6.jar: java.built
 	cd $(classdir) && \

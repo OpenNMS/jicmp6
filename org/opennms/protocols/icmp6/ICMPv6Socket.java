@@ -38,7 +38,7 @@
  *      http://www.opennms.org/
  *      http://www.opennms.com/
  */
-package org.opennms.protocols.icmp;
+package org.opennms.protocols.icmp6;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -53,7 +53,7 @@ import java.net.InetAddress;
  * @author <a href="http://www.opennms.org/">OpenNMS </a>
  * 
  */
-public final class IcmpSocket {
+public final class ICMPv6Socket {
     private static final String LIBRARY_NAME = "jicmp6";
     private static final String PROPERTY_NAME = "opennms.library.jicmp6";
     private static final String LOGGER_PROPERTY_NAME = "opennms.logger.jicmp6";
@@ -71,7 +71,6 @@ public final class IcmpSocket {
      * 
      * It looks unused, but it is used solely by native code.
      */
-    @SuppressWarnings("unused")
     private final FileDescriptor m_rawFd;
 
     /**
@@ -93,7 +92,7 @@ public final class IcmpSocket {
      *                This exception is thrown if the socket fails to be opened
      *                correctly.
      */
-    public IcmpSocket() throws IOException {
+    public ICMPv6Socket() throws IOException {
         String property = System.getProperty(PROPERTY_NAME);
         if (property != null) {
             log().debug("System property '" + PROPERTY_NAME + "' set to '" + System.getProperty(PROPERTY_NAME) + ".  Attempting to load " + LIBRARY_NAME + " library from this location.");
@@ -109,11 +108,9 @@ public final class IcmpSocket {
         String osName = System.getProperty("os.name");
         if (osName != null && osName.toLowerCase().startsWith("windows")) {
         	// Windows complains if you receive before sending a packet
-	        ICMPEchoPacket p = new ICMPEchoPacket(0);
-	        p.setIdentity((short) 0);
-	        p.computeChecksum();
+            ICMPv6EchoRequest p = new ICMPv6EchoRequest(1234, 1234, 1234);
 	        byte[] buf = p.toBytes();
-	        DatagramPacket dgp = new DatagramPacket(buf, buf.length, InetAddress.getByName("127.0.0.1"), 0);
+	        DatagramPacket dgp = new DatagramPacket(buf, buf.length, InetAddress.getByName("::1"), 0);
 	        send(dgp);
         }
     }
