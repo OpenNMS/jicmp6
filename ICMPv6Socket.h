@@ -33,8 +33,8 @@
  Tab Size = 8
 */
 
-#ifndef _ICMPSOCKET_H
-#define _ICMPSOCKET_H
+#ifndef _ICMPV6SOCKET_H
+#define _ICMPV6SOCKET_H
 
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
@@ -278,4 +278,4 @@
 #define SOCKET_ERROR -1
 #endif
 
-#endif // _ICMPSOCKET_H
+#endif // _ICMPV6SOCKET_H
