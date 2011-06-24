@@ -34,3 +34,4 @@ stamp-h1
 tests.sh
 tests/*.class
 jicmp6.jar
+debian/control
