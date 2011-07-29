@@ -1,3 +1,9 @@
+jicmp6 (1.0.1-1) unstable; urgency=low
+
+  * Minor build system updates.
+
+ -- Benjamin Reed <ranger@opennms.org>  Fri, 29 Jul 2011 14:43:00 -0500
+
 jicmp6 (1.0-1) unstable; urgency=low
 
   * Initial release as separately versioned package
