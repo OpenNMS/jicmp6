@@ -49,8 +49,36 @@ public class ICMPv6EchoRequest extends ICMPv6EchoPacket {
         setCode(0);
     }
 
+
+    public ICMPv6EchoRequest(int size) {
+        super(size);
+        setType(Type.EchoRequest);
+        setCode(0);
+    }
+
+
     public ICMPv6EchoRequest(int id, int seqNum, long threadId) {
         this();
+        
+        setIdentifier(id);
+        setSequenceNumber(seqNum);
+        
+        // data fields
+        setThreadId(threadId);
+        setCookie();
+        // timestamp is set later
+
+        // fill buffer with 'interesting' data
+        ByteBuffer buf = getDataBuffer();
+        for(int b = DATA_LENGTH; b < buf.limit(); b++) {
+            buf.put(b, (byte)b);
+        }
+
+    }
+    
+
+    public ICMPv6EchoRequest(int id, int seqNum, long threadId, int size) {
+        this(size);
         
         setIdentifier(id);
         setSequenceNumber(seqNum);
