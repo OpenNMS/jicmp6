@@ -1,20 +1,12 @@
 ACLOCAL_AMFLAGS = -I m4
 AM_CPPFLAGS = $(JNI_INCLUDES) -I$(top_srcdir) -I$(top_builddir)
 
-CLASS_FILES = \
-	org/opennms/protocols/icmp6/ICMPv6Packet.class \
-	org/opennms/protocols/icmp6/ICMPv6EchoPacket.class \
-	org/opennms/protocols/icmp6/ICMPv6EchoRequest.class \
-	org/opennms/protocols/icmp6/ICMPv6EchoReply.class \
-	org/opennms/protocols/icmp6/ICMPv6Socket.class
-
-
 JAVA_FILES = \
-	org/opennms/protocols/icmp6/ICMPv6Packet.java \
-	org/opennms/protocols/icmp6/ICMPv6EchoPacket.java \
-	org/opennms/protocols/icmp6/ICMPv6EchoRequest.java \
-	org/opennms/protocols/icmp6/ICMPv6EchoReply.java \
-	org/opennms/protocols/icmp6/ICMPv6Socket.java
+	src/main/java/org/opennms/protocols/icmp6/ICMPv6Packet.java \
+	src/main/java/org/opennms/protocols/icmp6/ICMPv6EchoPacket.java \
+	src/main/java/org/opennms/protocols/icmp6/ICMPv6EchoRequest.java \
+	src/main/java/org/opennms/protocols/icmp6/ICMPv6EchoReply.java \
+	src/main/java/org/opennms/protocols/icmp6/ICMPv6Socket.java
 
 classdir=classes
 VPATH += $(classdir)
