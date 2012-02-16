@@ -118,7 +118,7 @@
 #  include <ws2tcpip.h>
 # endif
 
-# include "win32/icmp.h"
+# include "icmp.h"
 # ifndef HAVE_STDINT_H
    typedef u_int in_addr_t;
    typedef u_int64 uint64_t;
