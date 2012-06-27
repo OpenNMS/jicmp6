@@ -44,14 +44,23 @@ AC_HEADER_STDC
 CPPFLAGS="$CPPFLAGS $JNI_INCLUDES -I."
 AC_CHECK_HEADER([jni.h], [], [AC_MSG_ERROR([cannot find jni.h header with CPPFLAGS="$CPPFLAGS"])])
 
-AC_CHECK_HEADERS([netinet/in.h])
+AC_CHECK_HEADERS([sys/types.h netinet/in.h],[],[],[
+#ifdef HAVE_SYS_TYPES_H
+#include <sys/types.h>
+#endif
+])
+
 AC_CHECK_HEADERS([netinet/icmp6.h],[],[],[
+#ifdef HAVE_SYS_TYPES_H
+#include <sys/types.h>
+#endif
+
 #ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
 #endif
-
 ])
-AC_CHECK_HEADERS([sys/types.h AvailabilityMacros.h libkern/OSByteOrder.h architecture/byte_order.h byteswap.h errno.h malloc.h netdb.h stdlib.h sys/byteorder.h sys/time.h], [], [], [
+
+AC_CHECK_HEADERS([AvailabilityMacros.h libkern/OSByteOrder.h architecture/byte_order.h byteswap.h errno.h malloc.h netdb.h stdlib.h sys/byteorder.h sys/time.h], [], [], [
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
 #endif
