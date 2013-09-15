@@ -1,3 +1,9 @@
+jicmp6 (1.2.2-1) unstable; urgency=low
+
+  * Fix socket library detection.
+
+ -- Benjamin Reed <ranger@opennms.org>  Sun, 15 Sep 2013 09:43:00 -0400
+
 jicmp6 (1.2.0-1) stable; urgency=low
 
   * Build system cleanups.
