@@ -1,4 +1,10 @@
-jicmp6 (1.2.2-1) unstable; urgency=low
+jicmp6 (1.2.3-1) stable; urgency=low
+
+  * Fix for build on ARM.
+
+ -- Benjamin Reed <ranger@opennms.org>  Tue, 24 Jun 2014 10:36:00 -0400
+
+jicmp6 (1.2.2-1) stable; urgency=low
 
   * Fix socket library detection.
 
