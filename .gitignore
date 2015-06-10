@@ -15,6 +15,7 @@ aclocal.m4
 autom4te.cache
 build-tree
 classes
+compile
 config.guess
 config.h
 config.h.in
@@ -34,5 +35,9 @@ solaris/pkginfo
 stamp-h1
 tests.sh
 tests/*.class
+test-driver
+test-suite.log
+tests.sh.log
+tests.sh.trs
 jicmp6.jar
 debian/control
