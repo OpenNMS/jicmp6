@@ -56,7 +56,7 @@ jar_DATA = jicmp6.jar
 deploy:
 	mvn deploy:deploy-file
 
-.PHONY: deploy rpm
+.PHONY: deploy rpm srpm
 
 EXTRA_DIST = ChangeLog $(JAVA_FILES) win32/icmp.h \
 	tests.sh \
@@ -77,12 +77,20 @@ EXTRA_DIST = ChangeLog $(JAVA_FILES) win32/icmp.h \
 if MAKE_RPMS
 rpm: @RPM_TARGET@
 
+srpm: @SRPM_TARGET@
+
 EXTRA_DIST += jicmp6.spec
 
 $(RPM_TARGET): $(DISTFILES)
 	${MAKE} dist
-	-mkdir -p $(RPM_DIR)/SRPMS
+	-mkdir -p $(SRPM_DIR)
 	-mkdir -p `dirname $(RPM_TARGET)`
-	$(RPMBUILD_PROG) $(RPM_ARGS) $(RPM_TARBALL)
+	$(RPMBUILD_PROG) --define 'version $(VERSION)' --define 'rel $(RELEASE)' $(RPM_ARGS) $(RPM_TARBALL)
 	@echo "$(RPM_TARGET) created"
+
+$(SRPM_TARGET): $(DISTFILES)
+	${MAKE} dist
+	-mkdir -p $(SRPM_DIR)
+	$(RPMBUILD_PROG) --define 'version $(VERSION)' --define 'rel $(RELEASE)' $(SRPM_ARGS) $(RPM_TARBALL)
+	@echo "$(SRPM_TARGET) created"
 endif
