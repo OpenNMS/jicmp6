@@ -32,11 +32,11 @@ public class TestInitialization {
                 private void processReply(final ICMPv6Socket socket)
                         throws IOException {
                     
-                    //System.err.println("Waiting for packet");
+                    System.err.println("Waiting for packet");
                     DatagramPacket responsePacket = socket.receive();
 
 			        ICMPv6Packet icmpPacket = new ICMPv6Packet(responsePacket.getData(), responsePacket.getOffset(), responsePacket.getLength());
-			        //System.err.printf("Recieved packet of type %s\n", icmpPacket.getType());
+			        System.err.printf("Recieved packet of type %s\n", icmpPacket.getType());
 			        if (icmpPacket.getType() == Type.EchoReply) {
 			            ICMPv6EchoReply reply = new ICMPv6EchoReply(icmpPacket);
 			            double rtt = reply.getRoundTripTime()/1000.0;
@@ -59,7 +59,8 @@ public class TestInitialization {
 			    byte[] bytes = request.toBytes();
 			    DatagramPacket packet = new DatagramPacket(bytes, 0, bytes.length, InetAddress.getByName("::1"), 0);
             
-			    //System.err.println("Sending packet\n");
+			    System.err.println("Sending packet\n");
+			    socket.setTrafficClass(46); // expedited forwarding
 			    socket.send(packet);
 			    
 			    Thread.sleep(1000);

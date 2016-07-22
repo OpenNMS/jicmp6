@@ -420,6 +420,48 @@ Java_org_opennms_protocols_icmp6_ICMPv6Socket_initSocket (JNIEnv *env, jobject i
 	return;
 }
 
+/*
+ * Class: org_opennms_protocols_icmp_IcmpSocket
+ * Method: setTrafficClass
+ * Signature: (I)V;
+ */
+JNIEXPORT void JNICALL
+Java_org_opennms_protocols_icmp6_ICMPv6Socket_setTrafficClass (JNIEnv *env, jobject instance, jint tos)
+{
+    int iRC;
+
+    /* Get the current file descriptor */
+    onms_socket fd_value = getIcmpFd(env, instance);
+    if((*env)->ExceptionOccurred(env) != NULL)
+    {
+        goto end_settos; /* jump to end if necessary */
+    }
+    else if(fd_value < 0)
+    {
+        throwError(env, "java/io/IOException", "Invalid Socket Descriptor");
+        goto end_settos;
+    }
+
+#ifndef HAVE_SETSOCKOPT
+	throwError(env, "java/io/IOException", "Invalid Socket Descriptor");
+	goto end_settos;
+#endif
+
+    /* set the TOS options on the socket */
+    iRC = setsockopt(fd_value, IPPROTO_IPV6, IPV6_TCLASS, &tos, sizeof(tos));
+    if(iRC == SOCKET_ERROR)
+    {
+        /*
+        * Error reading the information from the socket
+        */
+        char errBuf[256];
+        int savedErrno = errno;
+        snprintf(errBuf, sizeof(errBuf), "Error reading data from the socket descriptor (iRC = %d, fd_value = %d, %d, %s)", iRC, fd_value, savedErrno, strerror(savedErrno));
+        throwError(env, "java/io/IOException", errBuf);
+    }
+end_settos:
+    return;
+}
 
 /*
 * Class:     org_opennms_protocols_icmp6_ICMPv6Socket
