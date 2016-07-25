@@ -90,6 +90,9 @@ int gettimeofday (struct timeval *tv, void* tz)
 #pragma export reset
 #endif
 
+#ifndef IPV6_DONTFRAG
+#define IPV6_DONTFRAG 62
+#endif
 
 /**
 * This method is used to lookup the instances java.io.FileDescriptor
@@ -421,7 +424,7 @@ Java_org_opennms_protocols_icmp6_ICMPv6Socket_initSocket (JNIEnv *env, jobject i
 }
 
 /*
- * Class: org_opennms_protocols_icmp_IcmpSocket
+ * Class: org_opennms_protocols_icmp6_ICMPv6Socket
  * Method: setTrafficClass
  * Signature: (I)V;
  */
@@ -462,6 +465,51 @@ Java_org_opennms_protocols_icmp6_ICMPv6Socket_setTrafficClass (JNIEnv *env, jobj
 end_settos:
     return;
 }
+
+/*
+ * Class: org_opennms_protocols_icmp6_ICMPv6Socket
+ * Method: allowFragmentation
+ * Signature: (B)V;
+ */
+JNIEXPORT void JNICALL
+Java_org_opennms_protocols_icmp6_ICMPv6Socket_allowFragmentation (JNIEnv *env, jobject instance, jboolean dofragment)
+{
+	int iRC;
+	int dontfragment = dofragment == JNI_TRUE? 0 : 1;
+
+	/* Get the current file descriptor */
+	onms_socket fd_value = getIcmpFd(env, instance);
+	if((*env)->ExceptionOccurred(env) != NULL)
+	{
+		goto end_setfragment; /* jump to end if necessary */
+	}
+	else if(fd_value < 0)
+	{
+		throwError(env, "java/io/IOException", "Invalid Socket Descriptor");
+		goto end_setfragment;
+	}
+
+#ifndef HAVE_SETSOCKOPT
+	throwError(env, "java/io/IOException", "Invalid Socket Descriptor");
+	goto end_setfragment;
+#endif
+
+    /* set the fragment option on the socket */
+    iRC = setsockopt(fd_value, IPPROTO_IPV6, IPV6_DONTFRAG, &dontfragment, sizeof(dontfragment));
+	if(iRC == SOCKET_ERROR)
+	{
+		/*
+		* Error calling setsockopt
+		*/
+		char errBuf[256];
+		int savedErrno = errno;
+		snprintf(errBuf, sizeof(errBuf), "Error setting fragmentation bit on socket descriptor (iRC = %d, fd_value = %d, %d, %s)", iRC, fd_value, savedErrno, strerror(savedErrno));
+		throwError(env, "java/io/IOException", errBuf);
+	}
+end_setfragment:
+	return;
+}
+
 
 /*
 * Class:     org_opennms_protocols_icmp6_ICMPv6Socket
