@@ -386,7 +386,6 @@ JNIEXPORT void JNICALL
 Java_org_opennms_protocols_icmp6_ICMPv6Socket_initSocket (JNIEnv *env, jobject instance)
 {
 	onms_socket icmp_fd = INVALID_SOCKET;
-	int sock_type = SOCK_RAW;
 #ifdef __WIN32__
 	int result;
 	WSADATA info;
@@ -403,12 +402,13 @@ Java_org_opennms_protocols_icmp6_ICMPv6Socket_initSocket (JNIEnv *env, jobject i
 #endif
 
 
-#if HAVE_GETENV
-	if (getenv ("JICMP6_USE_SOCK_DGRAM") != NULL) {
-		sock_type = SOCK_DGRAM;
-   }
-#endif
-	icmp_fd = socket(PF_INET6, sock_type, IPPROTO_ICMPV6);
+	icmp_fd = socket(PF_INET6, SOCK_DGRAM, IPPROTO_ICMPV6);
+
+	if(icmp_fd == SOCKET_ERROR)
+	{
+		// failed to get a datagram socket, try raw instead
+		icmp_fd = socket(PF_INET6, SOCK_RAW, IPPROTO_ICMPV6);
+	}
 
 	if(icmp_fd == SOCKET_ERROR)
 	{
@@ -424,12 +424,57 @@ Java_org_opennms_protocols_icmp6_ICMPv6Socket_initSocket (JNIEnv *env, jobject i
 }
 
 /*
+* Binds the socket to the ID port.
+*
+* An exception is thrown if the socket is invalid
+* or the bind call fails.
+*
+* Class:     org_opennms_protocols_icmp6_ICMPv6Socket
+* Method:    bindSocket
+* Signature: (S)V
+*/
+JNIEXPORT void JNICALL
+Java_org_opennms_protocols_icmp6_ICMPv6Socket_bindSocket (JNIEnv *env, jobject instance, jshort id)
+{
+	fprintf(stderr, "Binding socket to port %d\n", id);
+	struct sockaddr_in6 source_address;
+	size_t source_address_len;
+
+    /* Get the current file descriptor */
+    onms_socket fd_value = getIcmpFd(env, instance);
+    if((*env)->ExceptionOccurred(env) != NULL)
+    {
+        goto end_bind; /* jump to end if necessary */
+    }
+    else if(fd_value < 0)
+    {
+        throwError(env, "java/io/IOException", "Invalid Socket Descriptor");
+        goto end_bind;
+    }
+	memset(&source_address, 0, sizeof(struct sockaddr_in6));
+	source_address.sin6_family = AF_INET6;
+	source_address.sin6_port = htons(id);
+	source_address_len = sizeof(struct sockaddr_in6);
+
+	if(bind(fd_value, (struct sockaddr *)&source_address, source_address_len) == SOCKET_ERROR)
+	{
+		char	errBuf[128];	// for exceptions
+		int	savedErrno  = errno;
+		snprintf(errBuf, sizeof(errBuf), "System error binding ICMPv6 socket to ID %d (%d, %s)", id, savedErrno, strerror(savedErrno));
+		throwError(env, "java/net/SocketException", errBuf);
+		return;
+	}
+end_bind:
+	return;
+}
+
+/*
  * Class: org_opennms_protocols_icmp6_ICMPv6Socket
  * Method: setTrafficClass
  * Signature: (I)V;
  */
 JNIEXPORT void JNICALL
-Java_org_opennms_protocols_icmp6_ICMPv6Socket_setTrafficClass (JNIEnv *env, jobject instance, jint tos)
+Java_org_opennms_protocols_icmp6_ICMPv6Socket_setTrafficClass (JNIEnv *env, jobject instance, jint tclass)
 {
     int iRC;
 
@@ -437,45 +482,57 @@ Java_org_opennms_protocols_icmp6_ICMPv6Socket_setTrafficClass (JNIEnv *env, jobj
     onms_socket fd_value = getIcmpFd(env, instance);
     if((*env)->ExceptionOccurred(env) != NULL)
     {
-        goto end_settos; /* jump to end if necessary */
+        goto end_settclass; /* jump to end if necessary */
     }
     else if(fd_value < 0)
     {
         throwError(env, "java/io/IOException", "Invalid Socket Descriptor");
-        goto end_settos;
+        goto end_settclass;
     }
 
-#ifndef HAVE_SETSOCKOPT
-	throwError(env, "java/io/IOException", "Invalid Socket Descriptor");
-	goto end_settos;
+#if !defined(HAVE_SETSOCKOPT)
+	throwError(env, "java/io/IOException", "setsockopt() unavailable!");
+	goto end_settclass;
 #endif
 
-    /* set the TOS options on the socket */
-    iRC = setsockopt(fd_value, IPPROTO_IPV6, IPV6_TCLASS, &tos, sizeof(tos));
-    if(iRC == SOCKET_ERROR)
+	// allow receiving TCLASS on the socket
+	int on = 1;
+	iRC = setsockopt(fd_value, IPPROTO_IPV6, IPV6_RECVTCLASS, &on, sizeof(on));
+    if(iRC)
     {
-        /*
-        * Error reading the information from the socket
-        */
+    	// error setting socket option
         char errBuf[256];
         int savedErrno = errno;
-        snprintf(errBuf, sizeof(errBuf), "Error reading data from the socket descriptor (iRC = %d, fd_value = %d, %d, %s)", iRC, fd_value, savedErrno, strerror(savedErrno));
+        snprintf(errBuf, sizeof(errBuf), "Failed to enable IPV6_RECVTCLASS (iRC = %d, fd_value = %d, tclass = %d, %d, %s)", iRC, fd_value, tclass, savedErrno, strerror(savedErrno));
         throwError(env, "java/io/IOException", errBuf);
+        goto end_settclass;
     }
-end_settos:
+
+    // set the TCLASS options on the socket
+    iRC = setsockopt(fd_value, IPPROTO_IPV6, IPV6_TCLASS, &tclass, sizeof(tclass));
+    if(iRC)
+    {
+    	// error setting socket option
+        char errBuf[256];
+        int savedErrno = errno;
+        snprintf(errBuf, sizeof(errBuf), "Failed to set traffic class on the socket descriptor (iRC = %d, fd_value = %d, tclass = %d, %d, %s)", iRC, fd_value, tclass, savedErrno, strerror(savedErrno));
+        throwError(env, "java/io/IOException", errBuf);
+        goto end_settclass;
+    }
+end_settclass:
     return;
 }
 
 /*
  * Class: org_opennms_protocols_icmp6_ICMPv6Socket
- * Method: allowFragmentation
- * Signature: (B)V;
+ * Method: dontFragment
+ * Signature: ()V;
  */
 JNIEXPORT void JNICALL
-Java_org_opennms_protocols_icmp6_ICMPv6Socket_allowFragmentation (JNIEnv *env, jobject instance, jboolean dofragment)
+Java_org_opennms_protocols_icmp6_ICMPv6Socket_dontFragment (JNIEnv *env, jobject instance)
 {
 	int iRC;
-	int dontfragment = dofragment == JNI_TRUE? 0 : 1;
+	int dontfragment = 1;
 
 	/* Get the current file descriptor */
 	onms_socket fd_value = getIcmpFd(env, instance);

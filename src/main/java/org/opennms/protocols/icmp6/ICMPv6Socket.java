@@ -83,6 +83,16 @@ public final class ICMPv6Socket {
     private native void initSocket() throws IOException;
 
     /**
+     * This method is used to bind the socket.  It should be done after {@link #initSocket(short)}
+     * and any {@link #setTrafficClass(int)} or {@link #dontFragment()} calls, but
+     * before {@link #send(DatagramPacket)} or {@link #receive()} is first called.
+     * 
+     * @throws java.io.IOException
+     *             This is thrown if an error occurs binding the ICMP socket.
+     */
+    private native void bindSocket(short id) throws IOException;
+
+    /**
      * Constructs a new socket that is able to send and receive ICMP messages.
      * The newly constructed socket will receive all ICMP messages directed at
      * the local machine. The application must be prepared to handle any and
@@ -92,7 +102,7 @@ public final class ICMPv6Socket {
      *                This exception is thrown if the socket fails to be opened
      *                correctly.
      */
-    public ICMPv6Socket() throws IOException {
+    public ICMPv6Socket(final short id) throws IOException {
         String property = System.getProperty(PROPERTY_NAME);
         if (property != null) {
             log().debug("System property '" + PROPERTY_NAME + "' set to '" + System.getProperty(PROPERTY_NAME) + ".  Attempting to load " + LIBRARY_NAME + " library from this location.");
@@ -105,10 +115,11 @@ public final class ICMPv6Socket {
 
         m_rawFd = new FileDescriptor();
         initSocket();
+        bindSocket(id);
         String osName = System.getProperty("os.name");
         if (osName != null && osName.toLowerCase().startsWith("windows")) {
         	// Windows complains if you receive before sending a packet
-            ICMPv6EchoRequest p = new ICMPv6EchoRequest(1234, 1234, 1234);
+            ICMPv6EchoRequest p = new ICMPv6EchoRequest(id, 0, 1234);
 	        byte[] buf = p.toBytes();
 	        DatagramPacket dgp = new DatagramPacket(buf, buf.length, InetAddress.getByName("::1"), 0);
 	        send(dgp);
@@ -142,6 +153,13 @@ public final class ICMPv6Socket {
      * @throws IOException
      */
     public final native void setTrafficClass(final int tc) throws IOException;
+
+    /**
+     * This method enables setting the "Don't Fragment" bit on outgoing packets.
+     *
+     * @throws IOException
+     */
+    public final native void dontFragment() throws IOException;
 
     /**
      * This method is used to receive the next ICMP datagram from the operating

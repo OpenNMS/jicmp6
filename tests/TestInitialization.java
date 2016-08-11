@@ -14,7 +14,10 @@ public class TestInitialization {
 
 	public static void main(final String[] args) {
 		try {
-			final ICMPv6Socket socket = new ICMPv6Socket();
+                    int id = (int)(Math.random()*Short.MAX_VALUE);
+                    long threadId = (long)(Math.random()*Integer.MAX_VALUE);
+                    
+			final ICMPv6Socket socket = new ICMPv6Socket((short)id);
 			
 			Runnable r = new Runnable() {
 			    public void run() {
@@ -46,12 +49,23 @@ public class TestInitialization {
                 }
 			};
 			
-			Thread receiver = new Thread(r);
+                        System.err.println("Sending packet\n");
+                        try {
+                            socket.setTrafficClass(Integer.parseInt("011100", 2));
+                        } catch (final IOException e) {
+                            System.err.println("Failed to set traffic class.");
+                            e.printStackTrace();
+                        }
+                        try {
+                            socket.dontFragment();
+                        } catch (final IOException e) {
+                            System.err.println("Failed to set 'Don't Fragment' bit on socket.");
+                            e.printStackTrace();
+                        }
+
+                        Thread receiver = new Thread(r);
 			receiver.start();
-			
-			int id = (int)(Math.random()*Short.MAX_VALUE);
-			long threadId = (long)(Math.random()*Integer.MAX_VALUE);
-			
+
 			for(int seqNum = 0; seqNum < 10; seqNum++) {
 			
 			    ICMPv6EchoRequest request = new ICMPv6EchoRequest(id, seqNum, threadId);
@@ -59,9 +73,6 @@ public class TestInitialization {
 			    byte[] bytes = request.toBytes();
 			    DatagramPacket packet = new DatagramPacket(bytes, 0, bytes.length, InetAddress.getByName("::1"), 0);
             
-			    System.err.println("Sending packet\n");
-			    socket.setTrafficClass(46); // expedited forwarding
-			    socket.allowFragmentation(true);
 			    socket.send(packet);
 			    
 			    Thread.sleep(1000);
