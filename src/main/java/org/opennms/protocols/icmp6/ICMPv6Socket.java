@@ -57,7 +57,7 @@ public final class ICMPv6Socket {
     private static final String LIBRARY_NAME = "jicmp6";
     private static final String PROPERTY_NAME = "opennms.library.jicmp6";
     private static final String LOGGER_PROPERTY_NAME = "opennms.logger.jicmp6";
-    
+
     public interface Logger {
         public void debug(String msg);
         public void info(String msg);
@@ -104,11 +104,21 @@ public final class ICMPv6Socket {
      */
     public ICMPv6Socket(final short id) throws IOException {
         String property = System.getProperty(PROPERTY_NAME);
+
+        boolean loaded = false;
+
         if (property != null) {
-            log().debug("System property '" + PROPERTY_NAME + "' set to '" + System.getProperty(PROPERTY_NAME) + ".  Attempting to load " + LIBRARY_NAME + " library from this location.");
-            System.load(property);
-        } else {
-            log().debug("System property '" + PROPERTY_NAME + "' not set.  Attempting to load library using System.loadLibrary(\"" + LIBRARY_NAME + "\").");
+            try {
+                log().debug("System property '" + PROPERTY_NAME + "' set to '" + property + ".  Attempting to load " + LIBRARY_NAME + " library from this location.");
+                System.load(property);
+                loaded = true;
+            } catch (final UnsatisfiedLinkError e) {
+                log().info("Failed to load library " + property + ".");
+            }
+        }
+
+        if (!loaded) {
+            log().debug("Attempting to load library using System.loadLibrary(\"" + LIBRARY_NAME + "\").");
             System.loadLibrary(LIBRARY_NAME);
         }
         log().info("Successfully loaded " + LIBRARY_NAME + " library.");
@@ -118,14 +128,14 @@ public final class ICMPv6Socket {
         bindSocket(id);
         String osName = System.getProperty("os.name");
         if (osName != null && osName.toLowerCase().startsWith("windows")) {
-        	// Windows complains if you receive before sending a packet
+            // Windows complains if you receive before sending a packet
             ICMPv6EchoRequest p = new ICMPv6EchoRequest(id, 0, 1234);
-	        byte[] buf = p.toBytes();
-	        DatagramPacket dgp = new DatagramPacket(buf, buf.length, InetAddress.getByName("::1"), 0);
-	        send(dgp);
+            byte[] buf = p.toBytes();
+            DatagramPacket dgp = new DatagramPacket(buf, buf.length, InetAddress.getByName("::1"), 0);
+            send(dgp);
         }
     }
-    
+
     private Logger log() {
         try {
             if (System.getProperty(LOGGER_PROPERTY_NAME) != null) {
