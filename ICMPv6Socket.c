@@ -436,7 +436,6 @@ Java_org_opennms_protocols_icmp6_ICMPv6Socket_initSocket (JNIEnv *env, jobject i
 JNIEXPORT void JNICALL
 Java_org_opennms_protocols_icmp6_ICMPv6Socket_bindSocket (JNIEnv *env, jobject instance, jshort id)
 {
-	fprintf(stderr, "Binding socket to port %d\n", id);
 	struct sockaddr_in6 source_address;
 	size_t source_address_len;
 
