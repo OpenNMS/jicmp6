@@ -1,3 +1,9 @@
+jicmp6 (2.0.1-1) stable; urgency=low
+
+  * Maven now creates a bundle rather than a jar.
+
+ -- Benjamin Reed <ranger@opennms.org>  Mon, 12 Sep 2016 16:14:16 -0400
+
 jicmp6 (2.0.0-1) stable; urgency=low
 
   * Official release of the 2.0.0 codebase.
