@@ -38,7 +38,7 @@ git submodule update --init --recursive
 autoreconf -fvi
 ----
 
-.Generate make files using `/usr/local/lib` as install path and compile JICMP
+.Generate make files using `/usr/local/lib` as install path and compile JICMP6
 [source]
 ----
 ./configure
