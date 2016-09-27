@@ -14,7 +14,7 @@ _JICMP6_ is a small library to allow the use of _IPv6_ _ICMP_ (raw) packets in J
 
 The repository has a _git_ submodule which contains _Macros_ required to compile from source code.
 
-.Clone the respository on your local disk
+.Clone the respository on local disk
 [source]
 ----
 git clone https://github.com/OpenNMS/jicmp6.git
@@ -46,7 +46,7 @@ autoreconf -fvi
 make
 ----
 
-.Install the library on your system, root permissions may required if you work as a non-root user.
+.Install the library on your system, root permissions may required when working as non-root user.
 [source]
 ----
 sudo make install
