@@ -72,3 +72,5 @@ sysctl -w net.ipv4.ping_group_range="0 429496729"
 ----
 echo "net.ipv4.ping_group_range=0 429496729" > /etc/sysctl.d/03-non-root-icmp.conf
 ----
+
+Despite having _IPv4_ in the option name, this also effects _IPv6_ sockets.
