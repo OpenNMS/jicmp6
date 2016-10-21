@@ -18,9 +18,11 @@ jicmp6 (2.0.0-0.7) unstable; urgency=low
 
 jicmp6 (1.2.4-1) stable; urgency=low
 
-  * Build system changes.
+  * Create SRPMs.
+  * Fix Java handling on Mac OS X.
+  * Improved RRDtool detection.
 
- -- Benjamin Reed <ranger@opennms.org>  Fri, 12 Jun 2015 15:14:00 -0400
+ -- Benjamin Reed <ranger@opennms.org>  Fri, 21 Oct 2016 11:56:59 -0400
 
 jicmp6 (1.2.3-1) stable; urgency=low
 
