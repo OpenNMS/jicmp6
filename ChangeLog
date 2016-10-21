@@ -1,3 +1,13 @@
+1.2.4
+-----
+* Create SRPMs.
+* Fix Java handling on Mac OS X.
+* Improved RRDtool detection.
+
+1.2.3
+-----
+* Fix ARM build.
+
 1.2.2
 -----
 * Fix socket library detection.
