@@ -1,3 +1,8 @@
+2.0.3
+-----
+* Build with 'noexecstack' if available.
+* Fix 'make dist' on systems with 32-bit UIDs.
+
 2.0.2
 -----
 * Update documentation.
