@@ -3,7 +3,7 @@ jicmp6 (2.0.3-1) stable; urgency=low
   * Build with 'noexecstack' if available and fix 'make dist' on systems
     with 32-bit UIDs.
 
- -- Benjamin Reed <ranger@opennms.org>  Tue, 16 May 2017 !5:57:00 -0400
+ -- Benjamin Reed <ranger@opennms.org>  Tue, 16 May 2017 15:57:00 -0400
 
 jicmp6 (2.0.2-1) stable; urgency=low
 
