@@ -45,4 +45,3 @@ test-suite.log
 tests.sh.log
 tests.sh.trs
 jicmp6.jar
-debian/control
