@@ -80,6 +80,9 @@ rpm: @RPM_TARGET@
 
 srpm: @SRPM_TARGET@
 
+print_rpm: @RPM_TARGET@
+	@echo $(RPM_TARGET)
+
 EXTRA_DIST += jicmp6.spec
 
 $(RPM_TARGET): $(DISTFILES)

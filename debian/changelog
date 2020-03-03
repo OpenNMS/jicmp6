@@ -1,3 +1,9 @@
+jicmp6 (2.0.4-1) stable; urgency=low
+
+  * Fix maven build, update to newer m4 utilities.
+
+ -- Benjamin Reed <ranger@opennms.org>  Thu, 31 Jan 2019 11:09:38 -0500
+
 jicmp6 (2.0.3-1) stable; urgency=low
 
   * Build with 'noexecstack' if available and fix 'make dist' on systems
