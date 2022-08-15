@@ -55,7 +55,7 @@ jardir=$(datadir)/java
 jar_DATA = jicmp6.jar
 
 target/jicmp6-api-@VERSION@-javadoc.jar: java.built
-    mvn javadoc:jar
+	mvn javadoc:jar
 
 docs: target/jicmp6-api-@VERSION@-javadoc.jar
 

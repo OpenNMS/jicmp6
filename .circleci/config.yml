@@ -329,7 +329,7 @@ jobs:
           at: ~/
       - run:
           name: install OpenJDK 8
-          command:
+          command: |
             brew install "openjdk@8"
             export JAVA_HOME="/usr/local/homebrew/Cellar/openjdk@8"/*
             export PATH="${JAVA_HOME}/bin:${PATH}"
@@ -367,7 +367,11 @@ jobs:
           name: build x86 RPM
           command: |
             mkdir -p target/rpm/{SOURCES,BUILD}
-            rpmbuild --define "_topdir $(pwd -P)/target/rpm" --define "rel 0.${CIRCLE_BUILD_NUM}" --target=i686 -ba jicmp6.spec
+            if grep -q -- -SNAPSHOT version.m4; then
+              rpmbuild --define "_topdir $(pwd -P)/target/rpm" --define "rel 0.${CIRCLE_BUILD_NUM}" --target=i686 -ba jicmp6.spec
+            else
+              rpmbuild --define "_topdir $(pwd -P)/target/rpm" --define "rel 1" --target=i686 -ba jicmp6.spec
+            fi
             mkdir -p ~/artifacts/packages/rpm/i386/
             mv target/rpm/RPMS/*/*.rpm ~/artifacts/packages/rpm/i386/
       - save-artifacts:
@@ -400,7 +404,11 @@ jobs:
           name: build x64 RPM
           command: |
             mkdir -p target/rpm/{SOURCES,BUILD}
-            rpmbuild --define "_topdir $(pwd -P)/target/rpm" --define "rel 0.${CIRCLE_BUILD_NUM}" --target=x86_64 -ba jicmp6.spec
+            if grep -q -- -SNAPSHOT version.m4; then
+              rpmbuild --define "_topdir $(pwd -P)/target/rpm" --define "rel 0.${CIRCLE_BUILD_NUM}" --target=x86_64 -ba jicmp6.spec
+            else
+              rpmbuild --define "_topdir $(pwd -P)/target/rpm" --define "rel 1" --target=x86_64 -ba jicmp6.spec
+            fi
             mkdir -p ~/artifacts/packages/rpm/{source,x86_64}
             mv target/rpm/SRPMS/*.rpm  ~/artifacts/packages/rpm/source/
             mv target/rpm/RPMS/*/*.rpm ~/artifacts/packages/rpm/x86_64/
@@ -428,7 +436,13 @@ jobs:
           command: |
             VERSION="$(./configure --version | grep 'jicmp6 configure' | cut -d' ' -f3)"
             export DEB_TAR_SRCDIR="jicmp6-${VERSION}"
-            dch --controlmaint --newversion="${VERSION}-0.${CIRCLE_BUILD_NUM}" --urgency=low --distribution='UNRELEASED' "Automated build from CircleCI: https://github.com/OpenNMS/jicmp6/commit/${CIRCLE_SHA}"
+            if grep -q -- -SNAPSHOT version.m4; then
+              dch -b --controlmaint --newversion="${VERSION}-0.${CIRCLE_BUILD_NUM}" --urgency=low --distribution='UNRELEASED' "Automated build from CircleCI: https://github.com/OpenNMS/jicmp6/commit/${CIRCLE_SHA}"
+            elif grep -q "($VERSION-" debian/changelog; then
+              echo "$VERSION is already in the Debian changelog"
+            else
+              dch -b --controlmaint --newversion="${VERSION}-1" --urgency=low --distribution='stable' "Automated build from CircleCI: https://github.com/OpenNMS/jicmp6/commit/${CIRCLE_SHA}"
+            fi
             dpkg-buildpackage
             mkdir -p ~/artifacts/packages/debian/
             mv ../jicmp6_* ~/artifacts/packages/debian/
@@ -450,7 +464,13 @@ jobs:
           command: |
             VERSION="$(./configure --version | grep 'jicmp6 configure' | cut -d' ' -f3)"
             export DEB_TAR_SRCDIR="jicmp6-${VERSION}"
-            dch --controlmaint --newversion="${VERSION}-0.${CIRCLE_BUILD_NUM}" --urgency=low --distribution='UNRELEASED' "Automated build from CircleCI: https://github.com/OpenNMS/jicmp6/commit/${CIRCLE_SHA}"
+            if grep -q -- -SNAPSHOT version.m4; then
+              dch -b --controlmaint --newversion="${VERSION}-0.${CIRCLE_BUILD_NUM}" --urgency=low --distribution='UNRELEASED' "Automated build from CircleCI: https://github.com/OpenNMS/jicmp6/commit/${CIRCLE_SHA}"
+            elif grep -q "($VERSION-" debian/changelog; then
+              echo "$VERSION is already in the Debian changelog"
+            else
+              dch -b --controlmaint --newversion="${VERSION}-1" --urgency=low --distribution='stable' "Automated build from CircleCI: https://github.com/OpenNMS/jicmp6/commit/${CIRCLE_SHA}"
+            fi
             dpkg-buildpackage
             mkdir -p ~/artifacts/packages/debian/
             mv ../jicmp6_* ~/artifacts/packages/debian/
