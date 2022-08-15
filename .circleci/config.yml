@@ -10,11 +10,11 @@ parameters:
     default: stretch
   maven-version:
     type: string
-    default: "3.6.3"
+    default: 3.6.3
   # use the oldest version
   xcode-version:
     type: string
-    default: "11"
+    default: 11.7.0
 
 executors:
   centos-sign-executor:
