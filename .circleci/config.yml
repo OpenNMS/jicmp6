@@ -11,10 +11,10 @@ parameters:
   maven-version:
     type: string
     default: 3.6.3
-  # 11.5.0 is the last version with JDK8 installed
+  # use the oldest version
   xcode-version:
     type: string
-    default: 11.5.0
+    default: 11
 
 executors:
   centos-sign-executor:
@@ -327,6 +327,12 @@ jobs:
       - fetch-maven
       - attach_workspace:
           at: ~/
+      - run:
+          name: install OpenJDK 8
+          command:
+            brew install "openjdk@8"
+            export JAVA_HOME="/usr/local/homebrew/Cellar/openjdk@8"/*
+            export PATH="${JAVA_HOME}/bin:${PATH}"
       - do-build
       - run:
           name: collect mac binaries
@@ -596,7 +602,6 @@ jobs:
             make docs
             mkdir -p ~/artifacts
             mv target/*-javadoc.jar ~/artifacts/
-            mv build/site.zip ~/artifacts/
       - cache-save:
           key: node
           path: $HOME/.npm
