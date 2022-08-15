@@ -38,9 +38,9 @@ clean-local:
 
 java-classes: java.built
 
-java.built: $(JAVA_FILES)
+java.built: $(JAVA_FILES) pom.xml
 	-mkdir -p $(classdir)
-	$(JAVAC) $(JAVACFLAGS) -source 1.5 -target 1.5 -d $(classdir) $(JAVA_FILES) && touch java.built
+	$(JAVAC) $(JAVACFLAGS) -source $(JAVA_TARGET_VERSION) -target $(JAVA_TARGET_VERSION) -d $(classdir) $(JAVA_FILES) && touch java.built
 
 ICMPv6Socket.c: org_opennms_protocols_icmp6_ICMPv6Socket.h
 
@@ -53,6 +53,11 @@ jicmp6.jar: java.built
 
 jardir=$(datadir)/java
 jar_DATA = jicmp6.jar
+
+target/jicmp6-api-@VERSION@-javadoc.jar: java.built
+    mvn javadoc:jar
+
+docs: target/jicmp6-api-@VERSION@-javadoc.jar
 
 deploy:
 	mvn deploy:deploy-file
@@ -69,11 +74,7 @@ EXTRA_DIST = ChangeLog $(JAVA_FILES) win32/icmp.h \
 	debian/copyright \
 	debian/dirs \
 	debian/getjava \
-	debian/rules \
-	solaris/README \
-	solaris/pkginfo* \
-	solaris/Makefile \
-	solaris/prototype.*
+	debian/rules
 
 if MAKE_RPMS
 rpm: @RPM_TARGET@

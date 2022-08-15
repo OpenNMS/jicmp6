@@ -13,6 +13,7 @@
 .classpath
 .project
 .settings
+.vscode
 target
 Makefile
 Makefile.in
@@ -36,6 +37,7 @@ ltmain.sh
 org_opennms_*.h
 missing
 pom.xml
+pom.xml.asc
 solaris/pkginfo
 stamp-h1
 tests.sh
@@ -45,3 +47,12 @@ test-suite.log
 tests.sh.log
 tests.sh.trs
 jicmp6.jar
+
+.project
+.classpath
+node_modules
+package.json
+package-lock.json
+/build/
+/public/
+/docs-src/antora.yml

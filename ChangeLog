@@ -1,3 +1,15 @@
+3.0.0
+-----
+* (BREAKING) Require JDK 1.8 or higher.
+* Integrate CI builds with Git.
+* Modernize Maven dependencies.
+* Modernize Autoconf/Automake/Libtool macros.
+* Remove Solaris packaging bits.
+
+2.0.4
+-----
+* Minor build system updates.
+
 2.0.3
 -----
 * Build with 'noexecstack' if available.

@@ -1,56 +1,30 @@
 /*
-This file is part of the OpenNMS(R) Application.
+ * This file is part of JICMP6.
+ *
+ * JICMP6 is Copyright (C) 2011-2022 The OpenNMS Group, Inc.
+ * OpenNMS(R) is Copyright (C) 1999-2022 The OpenNMS Group, Inc.
+ * 
+ * OpenNMS(R) is a registered trademark of The OpenNMS Group, Inc.
+ * 
+ * JICMP6 is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License, as
+ * published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ * 
+ * JICMP6 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with JICMP6. If not, see:
+ *      http://www.gnu.org/licenses/
+ * 
+ * For more information contact:
+ *     OpenNMS(R) Licensing <license@opennms.com>
+ *     http://www.opennms.com/
+ */
 
-OpenNMS(R) is Copyright (C) 2002-2007 The OpenNMS Group, Inc.  All rights reserved.
-OpenNMS(R) is a derivative work, containing both original code, included code and modified
-code that was published under the GNU General Public License. Copyrights for modified
-and included code are below.
-
-OpenNMS(R) is a registered trademark of The OpenNMS Group, Inc.
-
-Modifications:
-
-2011 Jun 23: Cloned from jicmp to implement icmpv6
-2008 Dec 10: More win32 cleanup, should be windows-HANDLE and 64-bit safe
-2008 Feb 05: Cleaned up win32 building, also merged patch from Alfred Reibenschuh <alfred.reibenschuh@it-austria.com>
-2007 Jul 25: Updated to be in a separate library; split out IcmpSocket.h, autoconfized tests
-2004 Oct 27: Handle Darwin 10.2 gracefully.
-2003 Sep 07: More Darwin tweaks.
-2003 Apr 26: Fixes byteswap issues on Solaris x86.
-2003 Mar 25: Used unt64_t instead of unsigned long long.
-2003 Feb 15: Bugfixes for Darwin.
-2003 Feb 11: Bugfixes for Darwin.
-2003 Feb 10: Bugfixes for Darwin.
-2003 Feb 09: ICMP response time on Darwin.
-2003 Feb 02: Initial Darwin port.
-2002 Nov 26: Fixed build issues on Solaris.
-2002 Nov 13: Added response times for ICMP.
-
-Original code base Copyright (C) 1999-2001 Oculan Corp.  All rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
-For more information contact:
-OpenNMS Licensing       <license@opennms.org>
-http://www.opennms.org/
-http://www.opennms.com/
-
-
-Tab Size = 8
-
-*/
 
 #include <config.h>
 
