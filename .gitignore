@@ -9,8 +9,6 @@
 *.log
 *.loT
 *.la
-*.pp
-*.te
 *.trs
 .classpath
 .project
@@ -49,6 +47,13 @@ test-suite.log
 tests.sh.log
 tests.sh.trs
 jicmp6.jar
+
+# selinux files
+*.fc
+*.if
+*.pp
+*.pp.bz2
+*.te
 
 .project
 .classpath
