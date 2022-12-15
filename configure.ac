@@ -114,6 +114,6 @@ AM_CONDITIONAL([WIN32], [test x$on_win32 = xyes])
 SHORT_VERSION="$(echo "$VERSION" | cut -d. -f1-2)"
 AC_SUBST([SHORT_VERSION])
 
-AC_CONFIG_FILES([Makefile jicmp6.spec pom.xml])
+AC_CONFIG_FILES([Makefile jicmp6.spec JICMP6.te pom.xml])
 AC_CONFIG_FILES([tests.sh], [chmod +x tests.sh])
 AC_OUTPUT

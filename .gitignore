@@ -48,6 +48,13 @@ tests.sh.log
 tests.sh.trs
 jicmp6.jar
 
+# selinux files
+*.fc
+*.if
+*.pp
+*.pp.bz2
+*.te
+
 .project
 .classpath
 node_modules
@@ -55,4 +62,5 @@ package.json
 package-lock.json
 /build/
 /public/
+/tmp/
 /docs-src/antora.yml
