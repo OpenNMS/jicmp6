@@ -1,3 +1,7 @@
+3.0.4
+-----
+* More SELinux fixes.
+
 3.0.3
 -----
 * Automatically deploy to Maven Central.
