@@ -686,7 +686,9 @@ workflows:
               only: /^jicmp.*/
             branches:
               only: master
-      - publish:
+      - publish-snapshot:
+          context:
+            - "cloudsmith-publish-account"
           # depend on signing/build steps to validate we're ready to publish
           requires:
             - build-docs
@@ -698,8 +700,10 @@ workflows:
               ignore: /.*/
             branches:
               only: master
-      - publish:
+      - publish-release:
           target_repository: opennms/common
+          context:
+            - "cloudsmith-publish-account"
           # depend on signing/build steps to validate we're ready to publish
           requires:
             - build-docs
