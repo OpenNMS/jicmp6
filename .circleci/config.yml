@@ -25,7 +25,7 @@ executors:
       image: ubuntu-2004:current
   debian-executor:
     docker:
-      - image: opennms/build-env:debian-jdk8-b8766
+      - image: opennms/build-env:debian-jdk8-b9656
 
 commands:
   cache-restore:
@@ -658,6 +658,8 @@ workflows:
             tags:
               only: /jicmp.*/
       - sign-debs:
+          context:
+            - "gpg-signing"
           requires:
             - build-packages-arm
             - build-packages-intel
@@ -665,6 +667,8 @@ workflows:
             tags:
               only: /jicmp.*/
       - sign-rpms:
+          context:
+            - "gpg-signing"
           requires:
             - build-packages-arm
             - build-packages-intel
@@ -673,8 +677,8 @@ workflows:
               only: /jicmp.*/
       - deploy:
           context:
-            - OSSRH Principal
-            - OpenNMS Build
+            - "gpg-signing"
+            - "OSSRH Principal"
           # depend on signing/build steps to validate we're ready to deploy
           requires:
             - build-docs
