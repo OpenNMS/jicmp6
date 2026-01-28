@@ -132,19 +132,13 @@ commands:
             fi
 
             sudo apt -q update
-            sudo apt -y -q install gnupg2 software-properties-common
-
-            echo "deb https://deb.debian.org/debian << pipeline.parameters.debian-version >>-backports main" | sudo tee /etc/apt/sources.list.d/<< pipeline.parameters.debian-version >>-backports.list
-            echo "deb https://deb.debian.org/debian-security << pipeline.parameters.debian-version >>/updates main" | sudo tee /etc/apt/sources.list.d/<< pipeline.parameters.debian-version >>-security.list
-            sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 04EE7237B7D453EC 648ACFD622F3D138 0E98404D386FA1D9 AA8E81B4331F7F50 112695A0E562B32A
-            sudo apt -q update
-            sudo apt -y -q -t << pipeline.parameters.debian-version >>-backports install apt-transport-https ca-certificates
+            sudo apt -y -q install gnupg2 software-properties-common apt-transport-https ca-certificates
       - cache-restore:
           key: debian-<< parameters.type >>
           path: /var/cache/apt
       - run:
           name: download jdk
-          command: sudo apt -y --download-only -q -t << pipeline.parameters.debian-version >>-backports install openjdk-17-jdk-headless
+          command: sudo apt -y --download-only -q -t install openjdk-17-jdk-headless
       - run:
           name: download other dependencies
           command: sudo apt -y --download-only -q install autotools-dev autoconf automake cdbs curl debhelper debianutils devscripts dpkg-dev git software-properties-common
@@ -153,7 +147,7 @@ commands:
           path: /var/cache/apt
       - run:
           name: install jdk
-          command: sudo apt -y -q -t << pipeline.parameters.debian-version >>-backports install openjdk-17-jdk-headless
+          command: sudo apt -y -q -t install openjdk-17-jdk-headless
       - run:
           name: install other dependencies
           command: sudo apt -y -q install autotools-dev autoconf automake cdbs curl debhelper debianutils devscripts dpkg-dev git software-properties-common
