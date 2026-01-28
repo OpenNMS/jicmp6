@@ -3,7 +3,7 @@ version: 2.1
 
 orbs:
   cloudsmith: cloudsmith/cloudsmith@1.0.5
-  sign-packages: opennms/sign-packages@3.0.0
+  sign-packages: opennms/sign-packages@3.0.1
 
 parameters:
   debian-version:
