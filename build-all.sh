@@ -35,6 +35,8 @@ apt-get -y --no-install-recommends install \
 	wget
 
 apt-get update
+rm -rf /etc/ssl/certs/java/cacerts
+update-ca-certificates
 apt-get -y install openjdk-17-jdk-headless
 
 # build tarball and binaries from source

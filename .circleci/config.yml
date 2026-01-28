@@ -138,7 +138,7 @@ commands:
           path: /var/cache/apt
       - run:
           name: download jdk
-          command: sudo apt -y --download-only -q -t install openjdk-17-jdk-headless
+          command: sudo apt -y --download-only -q install openjdk-17-jdk-headless
       - run:
           name: download other dependencies
           command: sudo apt -y --download-only -q install autotools-dev autoconf automake cdbs curl debhelper debianutils devscripts dpkg-dev git software-properties-common
@@ -147,10 +147,14 @@ commands:
           path: /var/cache/apt
       - run:
           name: install jdk
-          command: sudo apt -y -q -t install openjdk-17-jdk-headless
+          command: |
+            sudo rm -rf /etc/ssl/certs/java/cacerts
+            sudo update-ca-certificates
+            sudo apt -y -q install openjdk-17-jdk-headless
       - run:
           name: install other dependencies
-          command: sudo apt -y -q install autotools-dev autoconf automake cdbs curl debhelper debianutils devscripts dpkg-dev git software-properties-common
+          command: |
+            sudo apt -y -q install autotools-dev autoconf automake cdbs curl debhelper debianutils devscripts dpkg-dev git software-properties-common
 
   clean-caches:
     steps:
