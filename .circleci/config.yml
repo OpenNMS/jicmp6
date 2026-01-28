@@ -1,3 +1,4 @@
+---
 version: 2.1
 
 orbs:
@@ -7,25 +8,25 @@ orbs:
 parameters:
   debian-version:
     type: string
-    default: buster
+    default: bookworm
   maven-version:
     type: string
-    default: 3.6.3
+    default: 3.8.9
   # use the oldest version
   xcode-version:
     type: string
-    default: 11.7.0
+    default: 26.2.0
 
 executors:
   java-executor:
     docker:
-      - image: cimg/openjdk:8.0
+      - image: cimg/openjdk:17.0
   package-executor:
     machine:
-      image: ubuntu-2004:current
+      image: ubuntu-2404:current
   debian-executor:
     docker:
-      - image: opennms/build-env:debian-jdk8
+      - image: opennms/build-env:circleci-ubuntu-jdk17-b10832
 
 commands:
   cache-restore:
@@ -133,8 +134,8 @@ commands:
             sudo apt -q update
             sudo apt -y -q install gnupg2 software-properties-common
 
-            echo "deb http://deb.debian.org/debian << pipeline.parameters.debian-version >>-backports main" | sudo tee /etc/apt/sources.list.d/<< pipeline.parameters.debian-version >>-backports.list
-            echo "deb http://deb.debian.org/debian-security << pipeline.parameters.debian-version >>/updates main" | sudo tee /etc/apt/sources.list.d/<< pipeline.parameters.debian-version >>-security.list
+            echo "deb https://deb.debian.org/debian << pipeline.parameters.debian-version >>-backports main" | sudo tee /etc/apt/sources.list.d/<< pipeline.parameters.debian-version >>-backports.list
+            echo "deb https://deb.debian.org/debian-security << pipeline.parameters.debian-version >>/updates main" | sudo tee /etc/apt/sources.list.d/<< pipeline.parameters.debian-version >>-security.list
             sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 04EE7237B7D453EC 648ACFD622F3D138 0E98404D386FA1D9 AA8E81B4331F7F50 112695A0E562B32A
             sudo apt -q update
             sudo apt -y -q -t << pipeline.parameters.debian-version >>-backports install apt-transport-https ca-certificates
@@ -143,7 +144,7 @@ commands:
           path: /var/cache/apt
       - run:
           name: download jdk
-          command: sudo apt -y --download-only -q -t << pipeline.parameters.debian-version >>-backports install openjdk-8-jdk-headless
+          command: sudo apt -y --download-only -q -t << pipeline.parameters.debian-version >>-backports install openjdk-17-jdk-headless
       - run:
           name: download other dependencies
           command: sudo apt -y --download-only -q install autotools-dev autoconf automake cdbs curl debhelper debianutils devscripts dpkg-dev git software-properties-common
@@ -152,7 +153,7 @@ commands:
           path: /var/cache/apt
       - run:
           name: install jdk
-          command: sudo apt -y -q -t << pipeline.parameters.debian-version >>-backports install openjdk-8-jdk-headless
+          command: sudo apt -y -q -t << pipeline.parameters.debian-version >>-backports install openjdk-17-jdk-headless
       - run:
           name: install other dependencies
           command: sudo apt -y -q install autotools-dev autoconf automake cdbs curl debhelper debianutils devscripts dpkg-dev git software-properties-common
@@ -278,7 +279,7 @@ commands:
             esac
             set | grep CIRCLE > /tmp/build-env.txt
             docker run --rm --privileged tonistiigi/binfmt:latest --install all
-            docker run --env-file /tmp/build-env.txt --rm -it --platform "${PLATFORM}" -v "$(pwd):/workdir" -w /workdir "<< parameters.platform >>/debian:buster" ./build-all.sh "<< parameters.platform >>"
+            docker run --env-file /tmp/build-env.txt --rm -it --platform "${PLATFORM}" -v "$(pwd):/workdir" -w /workdir "<< parameters.platform >>/debian:bookworm" ./build-all.sh "<< parameters.platform >>"
 
 jobs:
   build-from-source:
@@ -338,13 +339,14 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
-          name: install OpenJDK 8
+          name: install OpenJDK 17
           command: |
             HOMEBREW_NO_AUTO_UPDATE=1 brew install "openjdk@8"
             sudo ln -sfn /usr/local/opt/openjdk@8/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-8.jdk
       - run:
           name: configure and build
           command: |
+            export JAVA_HOME="$(/usr/libexec/java_home -v 17)"
             export PATH="$HOME/maven/bin:$PATH"
             ./configure
             make
@@ -554,7 +556,7 @@ jobs:
 
   build-docs:
     docker:
-      - image: cimg/openjdk:8.0-node
+      - image: cimg/openjdk:17.0-node
     resource_class: small
     steps:
       - fetch-maven
@@ -585,7 +587,7 @@ jobs:
 
   publish-docs:
     docker:
-      - image: cimg/openjdk:8.0-node
+      - image: cimg/openjdk:17.0-node
     resource_class: small
     steps:
       - checkout
