@@ -256,20 +256,14 @@ commands:
     parameters:
       platform:
         type: enum
-        enum: ["arm32v7", "arm64v8", "i386", "amd64"]
+        enum: ["arm64v8", "amd64"]
     steps:
       - run:
           name: build << parameters.platform >>
           command: |
             case "<< parameters.platform >>" in
-              arm32v7)
-                PLATFORM="linux/arm/v7"
-                ;;
               arm64)
                 PLATFORM="linux/arm64"
-                ;;
-              i386)
-                PLATFORM="linux/i386"
                 ;;
               amd64)
                 PLATFORM="linux/amd64"
@@ -401,13 +395,7 @@ jobs:
           at: ~/
       - fetch-artifacts:
           path: ~/artifacts/rpm/
-          location: arm32v7-rpm
-      - fetch-artifacts:
-          path: ~/artifacts/rpm/
           location: arm64v8-rpm
-      - fetch-artifacts:
-          path: ~/artifacts/rpm/
-          location: i386-rpm
       - fetch-artifacts:
           path: ~/artifacts/rpm/
           location: amd64-rpm
@@ -443,13 +431,7 @@ jobs:
           at: ~/
       - fetch-artifacts:
           path: ~/artifacts/deb
-          location: arm32v7-deb
-      - fetch-artifacts:
-          path: ~/artifacts/deb
           location: arm64v8-deb
-      - fetch-artifacts:
-          path: ~/artifacts/deb
-          location: i386-deb
       - fetch-artifacts:
           path: ~/artifacts/deb
           location: amd64-deb
@@ -520,31 +502,13 @@ jobs:
           cloudsmith-repository: << parameters.target_repository >>
           package-format: rpm
           package-distribution: any-distro/any-version
-          package-path: ~/artifacts/rpm-signed/jicmp6-*.i686.rpm
-      - cloudsmith/publish:
-          allow-republish: true
-          cloudsmith-repository: << parameters.target_repository >>
-          package-format: rpm
-          package-distribution: any-distro/any-version
           package-path: ~/artifacts/rpm-signed/jicmp6-*.x86_64.rpm
       - cloudsmith/publish:
           allow-republish: true
           cloudsmith-repository: << parameters.target_repository >>
           package-format: deb
           package-distribution: any-distro/any-version
-          package-path: ~/artifacts/debian-signed/jicmp6_*_armhf.deb
-      - cloudsmith/publish:
-          allow-republish: true
-          cloudsmith-repository: << parameters.target_repository >>
-          package-format: deb
-          package-distribution: any-distro/any-version
           package-path: ~/artifacts/debian-signed/jicmp6_*_arm64.deb
-      - cloudsmith/publish:
-          allow-republish: true
-          cloudsmith-repository: << parameters.target_repository >>
-          package-format: deb
-          package-distribution: any-distro/any-version
-          package-path: ~/artifacts/debian-signed/jicmp6_*_i386.deb
       - cloudsmith/publish:
           allow-republish: true
           cloudsmith-repository: << parameters.target_repository >>
@@ -633,7 +597,7 @@ workflows:
           matrix:
             alias: build-packages-arm
             parameters:
-              platform: ["arm32v7", "arm64v8"]
+              platform: ["arm64v8"]
               resource: ["arm.medium"]
           requires:
             - build-from-source
@@ -644,7 +608,7 @@ workflows:
           matrix:
             alias: build-packages-intel
             parameters:
-              platform: ["i386","amd64"]
+              platform: ["amd64"]
               resource: ["medium"]
           requires:
             - build-from-source
