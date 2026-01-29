@@ -406,15 +406,6 @@ jobs:
             sudo apt-get -y install gnupg2 rpm
       - sign-packages/setup-env:
           gnupg_home: ~/tmp/gpg
-      - run:
-          name: prepare artifacts
-          command: |
-            cd ~
-            mkdir -p artifacts/rpm-signed/
-            find artifacts/rpm -name \*.rpm | while read -r INFILE; do
-              OUTFILE="$(echo "$INFILE" | sed -e 's,artifacts/rpm,artifacts/rpm-signed,g')"
-              docker run -v `pwd`:/workspace -w /workspace opennms/rpm-add-checksum -- "${INFILE}" "${OUTFILE}"
-            done
       - sign-packages/sign-rpms:
           gnupg_home: ~/tmp/gpg
           gnupg_key: opennms@opennms.org
@@ -435,7 +426,8 @@ jobs:
       - fetch-artifacts:
           path: ~/artifacts/deb
           location: amd64-deb
-      - sign-packages/install-deb-dependencies
+      - sign-packages/install-deb-dependencies:
+          use_sudo: true
       - sign-packages/setup-env:
           gnupg_home: ~/tmp/gpg
       - sign-packages/sign-debs:
