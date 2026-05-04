@@ -1,3 +1,9 @@
+jicmp6 (4.0.0-1) stable; urgency=low
+
+  * JICMP6 now requires JDK 17.
+
+-- OpenNMS Release Manager <opennms@opennms.org>  Mon, 04 May 2026 11:11:57 -0400
+
 jicmp6 (3.0.3-1) stable; urgency=low
 
   * Automatically deploy to Maven Central.
