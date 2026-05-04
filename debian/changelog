@@ -18,7 +18,7 @@ jicmp6 (3.0.1-1) stable; urgency=medium
 
 jicmp6 (3.0.0-1) stable; urgency=medium
 
-  * Update to use LGPLv3, build system cleanups, requires JDK 1.8+.
+  * Update to use LGPLv3, build system cleanups, requires JDK 17.
 
  -- Benjamin Reed <ranger@opennms.org>  Mon, 15 Aug 2022 15:40:00 -0400
 

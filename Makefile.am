@@ -40,7 +40,7 @@ java-classes: java.built
 
 java.built: $(JAVA_FILES) pom.xml
 	-mkdir -p $(classdir)
-	$(JAVAC) $(JAVACFLAGS) -source $(JAVA_TARGET_VERSION) -target $(JAVA_TARGET_VERSION) -d $(classdir) $(JAVA_FILES) && touch java.built
+	$(JAVAC) $(JAVACFLAGS) --release $(JAVA_TARGET_VERSION) -h . -d $(classdir) $(JAVA_FILES) && touch java.built
 
 ICMPv6Socket.c: org_opennms_protocols_icmp6_ICMPv6Socket.h
 
