@@ -482,12 +482,6 @@ jobs:
           cloudsmith-repository: << parameters.target_repository >>
           package-format: rpm
           package-distribution: any-distro/any-version
-          package-path: ~/artifacts/rpm/jicmp6-*.armv7hl.rpm
-      - cloudsmith/publish:
-          allow-republish: true
-          cloudsmith-repository: << parameters.target_repository >>
-          package-format: rpm
-          package-distribution: any-distro/any-version
           package-path: ~/artifacts/rpm/jicmp6-*.aarch64.rpm
       - cloudsmith/publish:
           allow-republish: true
